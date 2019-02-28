@@ -1,0 +1,213 @@
+library ieee;
+use IEEE.STD_LOGIC_1164.all;
+use ieee.numeric_std.all;
+
+
+entity singlePortRAM_de10 is
+	 
+	PORT(SW: in std_logic_vector(9 downto 0); -- 9..5 addr, 4..1 data 0 we_b
+		  CLOCK_50: in std_logic;			
+		  
+		  HEX5: out std_logic_vector(6 downto 0); -- addr
+		  HEX4: out std_logic_vector(6 downto 0); -- addr
+
+		  HEX1: out std_logic_vector(6 downto 0); -- data
+		  HEX0: out std_logic_vector(6 downto 0)); -- data
+		  
+--		  LEDR: out std_logic_vector(7 downto 0)); -- absolutely useless, just let output go somewhere
+
+end entity;
+
+architecture de10 of singlePortRAM_de10 is
+
+	signal mydataout: std_logic_vector(7 downto 0);
+	
+	-- output constant
+	constant h0: std_logic_vector:="1000000";
+	constant h1: std_logic_vector:="1111001";
+	constant h2: std_logic_vector:="0100100";
+	constant h3: std_logic_vector:="0110000";
+	constant h4: std_logic_vector:="0011001";
+	constant h5: std_logic_vector:="0010010";
+	constant h6: std_logic_vector:="0000010";
+	constant h7: std_logic_vector:="1111000";
+	constant h8: std_logic_vector:="0000000";
+	constant h9: std_logic_vector:="0010000";
+	constant  A: std_logic_vector:="0001000";
+	constant  B: std_logic_vector:="0000011";
+	constant  C: std_logic_vector:="1000110";
+	constant  D: std_logic_vector:="1011110";
+	constant  E: std_logic_vector:="0000110";
+	constant  F: std_logic_vector:="0001110";
+	
+
+	COMPONENT singlePortRAM
+		port(clk, we_b: in std_logic;
+			  addr: in std_logic_vector(4 downto 0);
+			  data_in: in std_logic_vector(7 downto 0);
+			  data_out: out std_logic_vector(7 downto 0));
+	end component;
+	
+	begin
+	
+-- 7 seg display	
+	process(all)
+	begin
+		case unsigned(SW(9 downto 5)) is -- addr
+			when to_unsigned(0, 5) =>
+				hex5 <= h0; hex4 <= h0; 
+			when to_unsigned(1, 5) =>
+				hex5 <= h0; hex4 <= h1; 
+			when to_unsigned(2, 5) =>
+				hex5 <= h0; hex4 <= h2; 
+			when to_unsigned(3, 5) =>
+				hex5 <= h0; hex4 <= h3; 
+			when to_unsigned(4, 5) =>
+				hex5 <= h0; hex4 <= h4; 
+			when to_unsigned(5, 5) =>
+				hex5 <= h0; hex4 <= h5; 
+			when to_unsigned(6, 5) =>
+				hex5 <= h0; hex4 <= h6;
+			when to_unsigned(7, 5) =>
+				hex5 <= h0; hex4 <= h7; 
+			when to_unsigned(8, 5) =>
+				hex5 <= h0; hex4 <= h8; 
+			when to_unsigned(9, 5) =>
+				hex5 <= h0; hex4 <= h9; 
+			when to_unsigned(10, 5) =>
+				hex5 <= h0; hex4 <= A; 
+			when to_unsigned(11, 5) =>
+				hex5 <= h0; hex4 <= B; 
+			when to_unsigned(12, 5) =>
+				hex5 <= h0; hex4 <= C;	
+			when to_unsigned(13, 5) =>
+				hex5 <= h0; hex4 <= D; 
+			when to_unsigned(14, 5) =>
+				hex5 <= h0; hex4 <= E; 
+			when to_unsigned(15, 5) =>
+				hex5 <= h0; hex4 <= F;
+			when to_unsigned(16, 5) =>
+				hex5 <= h1; hex4 <= h0; 
+			when to_unsigned(17, 5) =>
+				hex5 <= h1; hex4 <= h1; 
+			when to_unsigned(18, 5) =>
+				hex5 <= h1; hex4 <= h2; 
+			when to_unsigned(19, 5) =>
+				hex5 <= h1; hex4 <= h3; 
+			when to_unsigned(20, 5) =>
+				hex5 <= h1; hex4 <= h4; 
+			when to_unsigned(21, 5) =>
+				hex5 <= h1; hex4 <= h5; 
+			when to_unsigned(22, 5) =>
+				hex5 <= h1; hex4 <= h6;
+			when to_unsigned(23, 5) =>
+				hex5 <= h1; hex4 <= h7; 
+			when to_unsigned(24, 5) =>
+				hex5 <= h1; hex4 <= h8; 
+			when to_unsigned(25, 5) =>
+				hex5 <= h1; hex4 <= h9; 
+			when to_unsigned(26, 5) =>
+				hex5 <= h1; hex4 <= A; 
+			when to_unsigned(27, 5) =>
+				hex5 <= h1; hex4 <= B; 
+			when to_unsigned(28, 5) =>
+				hex5 <= h1; hex4 <= C;	
+			when to_unsigned(29, 5) =>
+				hex5 <= h1; hex4 <= D; 
+			when to_unsigned(30, 5) =>
+				hex5 <= h1; hex4 <= E; 
+			when to_unsigned(31, 5) =>
+				hex5 <= h1; hex4 <= F;
+			when others =>
+				hex5 <= "1111111"; hex4 <= "1111111";
+		end case;
+		
+		if(SW(0)='0') then
+		
+		case unsigned(SW(4 downto 1)) is -- data in and out
+			when to_unsigned(0, 4) =>
+				hex1 <= h0; hex0 <= h0; 
+			when to_unsigned(1, 4) =>
+				hex1 <= h0; hex0 <= h1; 
+			when to_unsigned(2, 4) =>
+				hex1 <= h0; hex0 <= h2; 
+			when to_unsigned(3, 4) =>
+				hex1 <= h0; hex0 <= h3; 
+			when to_unsigned(4, 4) =>
+				hex1 <= h0; hex0 <= h4; 
+			when to_unsigned(5, 4) =>
+				hex1 <= h0; hex0 <= h5; 
+			when to_unsigned(6, 4) =>
+				hex1 <= h0; hex0 <= h6;
+			when to_unsigned(7, 4) =>
+				hex1 <= h0; hex0 <= h7; 
+			when to_unsigned(8, 4) =>
+				hex1 <= h0; hex0 <= h8; 
+			when to_unsigned(9, 4) =>
+				hex1 <= h0; hex0 <= h9; 
+			when to_unsigned(10, 4) =>
+				hex1 <= h0; hex0 <= A; 
+			when to_unsigned(11, 4) =>
+				hex1 <= h0; hex0 <= B; 
+			when to_unsigned(12, 4) =>
+				hex1 <= h0; hex0 <= C;	
+			when to_unsigned(13, 4) =>
+				hex1 <= h0; hex0 <= D; 
+			when to_unsigned(14, 4) =>
+				hex1 <= h0; hex0 <= E; 
+			when to_unsigned(15, 4) =>
+				hex1 <= h0; hex0 <= F;
+			when others =>
+				hex1 <= "1111111"; hex0 <= "1111111" ;
+			end case;
+		else
+			case unsigned(mydataout) is -- data in and out
+			when to_unsigned(0, 8) =>
+				hex1 <= h0; hex0 <= h0; 
+			when to_unsigned(1, 8) =>
+				hex1 <= h0; hex0 <= h1; 
+			when to_unsigned(2, 8) =>
+				hex1 <= h0; hex0 <= h2; 
+			when to_unsigned(3, 8) =>
+				hex1 <= h0; hex0 <= h3; 
+			when to_unsigned(4, 8) =>
+				hex1 <= h0; hex0 <= h4; 
+			when to_unsigned(5, 8) =>
+				hex1 <= h0; hex0 <= h5; 
+			when to_unsigned(6, 8) =>
+				hex1 <= h0; hex0 <= h6;
+			when to_unsigned(7, 8) =>
+				hex1 <= h0; hex0 <= h7; 
+			when to_unsigned(8, 8) =>
+				hex1 <= h0; hex0 <= h8; 
+			when to_unsigned(9, 8) =>
+				hex1 <= h0; hex0 <= h9; 
+			when to_unsigned(10, 8) =>
+				hex1 <= h0; hex0 <= A; 
+			when to_unsigned(11, 8) =>
+				hex1 <= h0; hex0 <= B; 
+			when to_unsigned(12, 8) =>
+				hex1 <= h0; hex0 <= C;	
+			when to_unsigned(13, 8) =>
+				hex1 <= h0; hex0 <= D; 
+			when to_unsigned(14, 8) =>
+				hex1 <= h0; hex0 <= E; 
+			when to_unsigned(15, 8) =>
+				hex1 <= h0; hex0 <= F;
+			when others =>
+				hex1 <= "0000000"; hex0 <= "0000000" ;
+			end case;
+		end if;
+	end process;
+		
+------------------------------------
+--Design placement
+------------------------------------
+	DESIGN: singlePortRAM
+	port map(addr => SW(9 downto 5),
+				data_in => ("0000" & SW(4 downto 1)),
+				we_b => SW(0),
+				clk => CLOCK_50,
+				
+				data_out => mydataout); 
+end architecture de10;

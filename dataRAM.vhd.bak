@@ -1,0 +1,34 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity singlePortRAM is
+	port(clk, we_b: in std_logic;
+		  addr: in std_logic_vector(4 downto 0);
+		  data_in: in std_logic_vector(7 downto 0);
+		  data_out: out std_logic_vector(7 downto 0));
+end;
+
+architecture behavioral of singlePortRAM is
+	
+	-- create type
+	type ram_type is array (0 to 31) of std_logic_vector (7 downto 0);
+	
+	-- create memory
+	signal myRAM: ram_type;
+	
+	begin
+
+	-- SRAM write process
+	process (clk)
+	begin
+	if (rising_edge(clk)) then
+		if(we_b ='0') then
+			myRAM(to_integer(unsigned(addr))) <= data_in;
+		end if;
+	end if;
+	end process;
+
+	-- SRAM read
+	data_out <= myRAM(to_integer(unsigned(addr)));
+end behavioral;
